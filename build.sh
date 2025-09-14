@@ -4,12 +4,17 @@ set -o errexit
 
 echo "Starting build process..."
 
+# Check Python version
+echo "Python version being used:"
+python --version
+
 # Upgrade pip first
 echo "Upgrading pip..."
 pip install --upgrade pip
 
-# Install Python dependencies
+# Install Python dependencies with explicit PostgreSQL adapter
 echo "Installing Python dependencies..."
+pip install psycopg2-binary>=2.9.0,<3.0
 pip install -r requirements.txt
 
 # Run collectstatic

@@ -2,8 +2,8 @@
 Django==5.1.1
 djangorestframework==3.15.2
 
-# Database - Multiple options for compatibility
-psycopg2-binary==2.9.9
+# Database - Fixed for Python compatibility
+psycopg2-binary>=2.9.0,<3.0
 dj-database-url==2.2.0
 
 # Image Processing
