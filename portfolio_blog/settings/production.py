@@ -5,11 +5,22 @@ import dj_database_url
 DEBUG = False
 
 # Render.com specific allowed hosts
-ALLOWED_HOSTS = [
+# Get the specific domain from environment variable or default to general Render.com domains
+ALLOWED_HOSTS = []
+
+# Add specific domain from environment variable if provided
+if config('ALLOWED_HOSTS', default=''):
+    ALLOWED_HOSTS.extend(config('ALLOWED_HOSTS', default='').split(','))
+
+# Add default Render.com domains
+ALLOWED_HOSTS.extend([
     '.onrender.com',
     'localhost',
     '127.0.0.1',
-]
+])
+
+# Remove any empty strings and duplicates
+ALLOWED_HOSTS = list(filter(None, set(ALLOWED_HOSTS)))
 
 # Security settings for production
 SECURE_BROWSER_XSS_FILTER = True
