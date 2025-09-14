@@ -2,7 +2,7 @@ services:
   - type: web
     name: portfolio-blog
     env: python
-    buildCommand: "./build.sh"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
     startCommand: "gunicorn --bind 0.0.0.0:$PORT portfolio_blog.wsgi:application"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
@@ -12,7 +12,7 @@ services:
       - key: DEBUG
         value: "False"
       - key: PYTHON_VERSION
-        value: "3.11.4"
+        value: "3.13.4"
     
   # Optional: Add a PostgreSQL database
   - type: pgsql
