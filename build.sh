@@ -4,6 +4,10 @@ set -o errexit
 
 echo "Starting build process..."
 
+# Upgrade pip first
+echo "Upgrading pip..."
+pip install --upgrade pip
+
 # Install Python dependencies
 echo "Installing Python dependencies..."
 pip install -r requirements.txt
