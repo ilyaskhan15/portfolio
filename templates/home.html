@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Professional Portfolio & Blog{% endblock %}
+{% block og_title %}Home - Professional Portfolio & Blog{% endblock %}
+{% block twitter_title %}Home - Professional Portfolio & Blog{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-primary-600 to-primary-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    Hi, I'm <span class="text-yellow-400">Muhammad Ilyas</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                    Full-Stack Developer passionate about creating innovative web solutions and sharing knowledge through technical articles.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{% url 'portfolio:portfolio' %}" class="bg-yellow-400 text-primary-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition duration-200 text-center">
+                        View Portfolio
+                    </a>
+                    <a href="{% url 'blog:post_list' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-900 transition duration-200 text-center">
+                        Read Blog
+                    </a>
+                </div>
+            </div>
+            <div class="flex justify-center lg:justify-end">
+                <div class="relative">
+                    <div class="w-80 h-80 bg-white rounded-full overflow-hidden shadow-2xl">
+                        <img src="{% static 'img/ilyas.jpg' %}" alt="Muhammad Ilyas" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 bg-yellow-400 text-primary-900 p-4 rounded-full shadow-lg">
+                        <i class="fas fa-code text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Preview -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Technical Skills</h2>
+            <p class="text-xl text-gray-600">Technologies I work with</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+            <!-- Skill items - these would be dynamically loaded from database -->
+            <div class="flex flex-col items-center group">
+                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-50 transition duration-200">
+                    <i class="fab fa-python text-2xl text-gray-700 group-hover:text-primary-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700">Python</span>
+            </div>
+            
+            <div class="flex flex-col items-center group">
+                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-50 transition duration-200">
+                    <i class="fab fa-js-square text-2xl text-gray-700 group-hover:text-primary-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700">JavaScript</span>
+            </div>
+            
+            <div class="flex flex-col items-center group">
+                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-50 transition duration-200">
+                    <i class="fab fa-react text-2xl text-gray-700 group-hover:text-primary-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700">React</span>
+            </div>
+            
+            <div class="flex flex-col items-center group">
+                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-50 transition duration-200">
+                    <i class="fas fa-database text-2xl text-gray-700 group-hover:text-primary-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700">Django</span>
+            </div>
+            
+            <div class="flex flex-col items-center group">
+                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-50 transition duration-200">
+                    <i class="fab fa-docker text-2xl text-gray-700 group-hover:text-primary-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700">Docker</span>
+            </div>
+            
+            <div class="flex flex-col items-center group">
+                <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-50 transition duration-200">
+                    <i class="fab fa-aws text-2xl text-gray-700 group-hover:text-primary-600"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700">AWS</span>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'portfolio:skills' %}" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold">
+                View All Skills
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
+            <p class="text-xl text-gray-600">Some of my recent work</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Project cards - these would be dynamically loaded from database -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-gray-200">
+                    <img src="{% static 'img/project-placeholder.jpg' %}" alt="Project 1" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">E-commerce Platform</h3>
+                    <p class="text-gray-600 mb-4">Full-stack e-commerce solution with Django and React.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Django</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">React</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">PostgreSQL</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">View Project</a>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fab fa-github"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-gray-200">
+                    <img src="{% static 'img/project-placeholder.jpg' %}" alt="Project 2" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Task Management App</h3>
+                    <p class="text-gray-600 mb-4">Collaborative task management with real-time updates.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Django</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">WebSockets</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Redis</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">View Project</a>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fab fa-github"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div class="h-48 bg-gray-200">
+                    <img src="{% static 'img/project-placeholder.jpg' %}" alt="Project 3" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Data Analytics Dashboard</h3>
+                    <p class="text-gray-600 mb-4">Interactive dashboard for business intelligence.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Python</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">D3.js</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">MongoDB</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">View Project</a>
+                        <div class="flex space-x-2">
+                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fab fa-github"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'portfolio:portfolio' %}" class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition duration-200">
+                View All Projects
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Blog Posts -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Articles</h2>
+            <p class="text-xl text-gray-600">Recent thoughts on tech and football</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Blog post cards - these would be dynamically loaded from database -->
+            <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition duration-300">
+                <div class="h-48 bg-gray-200">
+                    <img src="{% static 'img/blog-placeholder.jpg' %}" alt="Blog post" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center text-sm text-gray-500 mb-2">
+                        <span class="bg-primary-100 text-primary-700 px-2 py-1 rounded">Technical</span>
+                        <span class="ml-2">March 15, 2024</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600">
+                        <a href="#">Building Scalable Django Applications</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">Learn best practices for architecting Django applications that can scale with your business needs.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">5 min read</span>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition duration-300">
+                <div class="h-48 bg-gray-200">
+                    <img src="{% static 'img/blog-placeholder.jpg' %}" alt="Blog post" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center text-sm text-gray-500 mb-2">
+                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Football</span>
+                        <span class="ml-2">March 12, 2024</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600">
+                        <a href="#">Tactical Analysis: Premier League Trends</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">Breaking down the latest tactical innovations in the Premier League this season.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">8 min read</span>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition duration-300">
+                <div class="h-48 bg-gray-200">
+                    <img src="{% static 'img/blog-placeholder.jpg' %}" alt="Blog post" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center text-sm text-gray-500 mb-2">
+                        <span class="bg-primary-100 text-primary-700 px-2 py-1 rounded">Technical</span>
+                        <span class="ml-2">March 10, 2024</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600">
+                        <a href="#">Modern JavaScript ES2024 Features</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">Exploring the latest JavaScript features and how they improve developer productivity.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">6 min read</span>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'blog:post_list' %}" class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition duration-200">
+                View All Articles
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-16 bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Let's Work Together</h2>
+        <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Have a project in mind? I'd love to hear about it. Let's discuss how we can bring your ideas to life.
+        </p>
+        <a href="mailto:your.email@example.com" class="bg-yellow-400 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition duration-200 inline-flex items-center">
+            <i class="fas fa-envelope mr-2"></i>
+            Get In Touch
+        </a>
+    </div>
+</section>
+{% endblock %}

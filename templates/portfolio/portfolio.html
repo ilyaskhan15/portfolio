@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portfolio - My Projects & Work{% endblock %}
+{% block og_title %}Portfolio - My Projects & Work{% endblock %}
+{% block twitter_title %}Portfolio - My Projects & Work{% endblock %}
+
+{% block meta_description %}Explore my portfolio of web development projects, technical skills, and professional experience. Featuring Django, React, Python, and full-stack development work.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-primary-600 to-primary-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">My Portfolio</h1>
+            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-8">
+                Showcasing my passion for creating innovative web solutions and delivering exceptional digital experiences
+            </p>
+            {% if profile %}
+            <div class="flex justify-center">
+                <a href="{% url 'portfolio:resume_download' %}" 
+                   class="bg-yellow-400 text-primary-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition duration-200 inline-flex items-center">
+                    <i class="fas fa-download mr-2"></i>
+                    Download Resume
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Profile Section -->
+{% if profile %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                {% if profile.profile_image %}
+                <div class="relative">
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}" 
+                         class="w-full max-w-md mx-auto rounded-2xl shadow-xl">
+                    <div class="absolute -bottom-6 -right-6 bg-primary-600 text-white p-4 rounded-full shadow-lg">
+                        <i class="fas fa-code text-2xl"></i>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ profile.full_name }}</h2>
+                <p class="text-xl text-primary-600 font-semibold mb-6">{{ profile.title }}</p>
+                <div class="prose text-gray-600 mb-8">{{ profile.bio|linebreaks }}</div>
+                
+                <!-- Contact Info -->
+                <div class="space-y-3 mb-8">
+                    {% if profile.email %}
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-envelope w-5 mr-3 text-primary-600"></i>
+                        <a href="mailto:{{ profile.email }}" class="hover:text-primary-600">{{ profile.email }}</a>
+                    </div>
+                    {% endif %}
+                    {% if profile.phone %}
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-phone w-5 mr-3 text-primary-600"></i>
+                        <a href="tel:{{ profile.phone }}" class="hover:text-primary-600">{{ profile.phone }}</a>
+                    </div>
+                    {% endif %}
+                    {% if profile.location %}
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-map-marker-alt w-5 mr-3 text-primary-600"></i>
+                        <span>{{ profile.location }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Social Links -->
+                <div class="flex space-x-4">
+                    {% if profile.linkedin %}
+                    <a href="{{ profile.linkedin }}" target="_blank" rel="noopener" 
+                       class="text-gray-400 hover:text-blue-600 transition duration-200">
+                        <i class="fab fa-linkedin-in text-2xl"></i>
+                    </a>
+                    {% endif %}
+                    {% if profile.github %}
+                    <a href="{{ profile.github }}" target="_blank" rel="noopener" 
+                       class="text-gray-400 hover:text-gray-900 transition duration-200">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                    {% endif %}
+                    {% if profile.twitter %}
+                    <a href="{{ profile.twitter }}" target="_blank" rel="noopener" 
+                       class="text-gray-400 hover:text-blue-400 transition duration-200">
+                        <i class="fab fa-twitter text-2xl"></i>
+                    </a>
+                    {% endif %}
+                    {% if profile.website %}
+                    <a href="{{ profile.website }}" target="_blank" rel="noopener" 
+                       class="text-gray-400 hover:text-primary-600 transition duration-200">
+                        <i class="fas fa-globe text-2xl"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Skills -->
+{% if featured_skills %}
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Core Skills</h2>
+            <p class="text-xl text-gray-600">Technologies and tools I work with</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8">
+            {% for skill in featured_skills %}
+            <div class="flex flex-col items-center group">
+                <div class="w-20 h-20 bg-white rounded-xl shadow-lg flex items-center justify-center mb-4 group-hover:shadow-xl transition duration-300">
+                    {% if skill.icon %}
+                    <img src="{{ skill.icon.url }}" alt="{{ skill.name }}" class="w-12 h-12">
+                    {% else %}
+                    <i class="fas fa-code text-2xl text-primary-600"></i>
+                    {% endif %}
+                </div>
+                <span class="text-sm font-medium text-gray-700 text-center">{{ skill.name }}</span>
+                <span class="text-xs text-gray-500">{{ skill.years_experience }}+ years</span>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'portfolio:skills' %}" 
+               class="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold">
+                View All Skills
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Projects -->
+{% if featured_projects %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
+            <p class="text-xl text-gray-600">Some of my recent work</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for project in featured_projects %}
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                {% if project.featured_image %}
+                <div class="h-48 overflow-hidden">
+                    <img src="{{ project.featured_image.url }}" 
+                         alt="{{ project.featured_image_alt|default:project.title }}" 
+                         class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                </div>
+                {% else %}
+                <div class="h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                    <i class="fas fa-laptop-code text-4xl text-white opacity-50"></i>
+                </div>
+                {% endif %}
+                
+                <div class="p-6">
+                    <!-- Project Type -->
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
+                            {{ project.get_project_type_display }}
+                        </span>
+                        {% if project.is_ongoing %}
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Ongoing</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Title and Description -->
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-primary-600 transition duration-200">
+                        <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4">{{ project.short_description }}</p>
+                    
+                    <!-- Technologies -->
+                    {% if project.technologies.all %}
+                    <div class="flex flex-wrap gap-1 mb-4">
+                        {% for tech in project.technologies.all|slice:":4" %}
+                        <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">{{ tech.name }}</span>
+                        {% endfor %}
+                        {% if project.technologies.count > 4 %}
+                        <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">+{{ project.technologies.count|add:"-4" }} more</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Links -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <a href="{{ project.get_absolute_url }}" 
+                           class="text-primary-600 hover:text-primary-700 font-semibold">
+                            View Details
+                        </a>
+                        <div class="flex space-x-3">
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" target="_blank" rel="noopener" 
+                               class="text-gray-400 hover:text-gray-600 transition duration-200">
+                                <i class="fab fa-github text-lg"></i>
+                            </a>
+                            {% endif %}
+                            {% if project.live_url %}
+                            <a href="{{ project.live_url }}" target="_blank" rel="noopener" 
+                               class="text-gray-400 hover:text-primary-600 transition duration-200">
+                                <i class="fas fa-external-link-alt text-lg"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent Experience -->
+{% if recent_experiences %}
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Current Role</h2>
+            <p class="text-xl text-gray-600">What I'm working on now</p>
+        </div>
+        
+        <div class="max-w-4xl mx-auto">
+            {% for experience in recent_experiences %}
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">{{ experience.position }}</h3>
+                        <p class="text-lg text-primary-600 font-semibold">{{ experience.company }}</p>
+                        <p class="text-gray-600">{{ experience.get_employment_type_display }}{% if experience.location %} • {{ experience.location }}{% endif %}</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 text-right">
+                        <p class="text-gray-600">{{ experience.start_date|date:'M Y' }} - {% if experience.is_current %}Present{% else %}{{ experience.end_date|date:'M Y' }}{% endif %}</p>
+                    </div>
+                </div>
+                
+                <div class="prose text-gray-600 mb-6">{{ experience.description|linebreaks }}</div>
+                
+                {% if experience.skills_used.all %}
+                <div>
+                    <h4 class="text-sm font-semibold text-gray-900 mb-2">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in experience.skills_used.all %}
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">{{ skill.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'portfolio:experience' %}" 
+               class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition duration-200">
+                View Full Experience
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="py-16 bg-primary-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Let's Work Together</h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Interested in collaborating on a project? I'd love to hear about your ideas and help bring them to life.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            {% if profile and profile.email %}
+            <a href="mailto:{{ profile.email }}" 
+               class="bg-yellow-400 text-primary-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition duration-200 inline-flex items-center justify-center">
+                <i class="fas fa-envelope mr-2"></i>
+                Send Email
+            </a>
+            {% endif %}
+            <a href="{% url 'blog:post_list' %}" 
+               class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-900 transition duration-200">
+                Read My Blog
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

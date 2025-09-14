@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - Project Details{% endblock %}
+{% block og_title %}{{ project.title }} - Project Details{% endblock %}
+{% block twitter_title %}{{ project.title }} - Project Details{% endblock %}
+
+{% block meta_description %}{{ project.description|truncatewords:30|striptags }}{% endblock %}
+
+{% block og_image %}
+{% if project.featured_image %}
+<meta property="og:image" content="{{ request.build_absolute_uri }}{{ project.featured_image.url }}">
+{% else %}
+<meta property="og:image" content="{% load static %}{% static 'img/og-default.jpg' %}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Project Hero Section -->
+<section class="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="flex items-center mb-4">
+                    <a href="{% url 'portfolio:portfolio' %}" class="text-blue-300 hover:text-white mr-2">
+                        <i class="fas fa-arrow-left"></i> Back to Portfolio
+                    </a>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                    {{ project.title }}
+                </h1>
+                <p class="text-xl text-blue-100 mb-8">
+                    {{ project.short_description }}
+                </p>
+                
+                <div class="flex flex-wrap gap-4 mb-8">
+                    {% if project.demo_url %}
+                    <a href="{{ project.demo_url }}" target="_blank" rel="noopener"
+                       class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        Live Demo
+                    </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank" rel="noopener"
+                       class="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-6 py-3 rounded-lg font-semibold transition duration-200">
+                        <i class="fab fa-github mr-2"></i>
+                        View Code
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Project Meta -->
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <span class="text-blue-300">Status:</span>
+                        <span class="ml-2 capitalize">{{ project.status }}</span>
+                    </div>
+                    <div>
+                        <span class="text-blue-300">Type:</span>
+                        <span class="ml-2">{{ project.get_project_type_display }}</span>
+                    </div>
+                    {% if project.start_date %}
+                    <div>
+                        <span class="text-blue-300">Started:</span>
+                        <span class="ml-2">{{ project.start_date|date:"M Y" }}</span>
+                    </div>
+                    {% endif %}
+                    {% if project.completion_date %}
+                    <div>
+                        <span class="text-blue-300">Completed:</span>
+                        <span class="ml-2">{{ project.completion_date|date:"M Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if project.featured_image %}
+            <div class="order-first lg:order-last">
+                <img src="{{ project.featured_image.url }}" 
+                     alt="{{ project.title }}" 
+                     class="w-full h-auto rounded-lg shadow-2xl">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Project Details -->
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Technologies Used -->
+        {% if project.technologies.all %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Technologies Used</h2>
+            <div class="flex flex-wrap gap-3">
+                {% for tech in project.technologies.all %}
+                <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium">
+                    {{ tech.name }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Project Description -->
+        {% if project.description %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Project Overview</h2>
+            <div class="prose prose-lg max-w-none text-gray-700">
+                {{ project.description|safe }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Key Features -->
+        {% if project.key_features %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Key Features</h2>
+            <div class="prose prose-lg max-w-none text-gray-700">
+                {{ project.key_features|safe }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Challenges & Solutions -->
+        {% if project.challenges %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Challenges & Solutions</h2>
+            <div class="prose prose-lg max-w-none text-gray-700">
+                {{ project.challenges|safe }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Project Gallery -->
+        {% if project.gallery_images.all %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Project Gallery</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for image in project.gallery_images.all %}
+                <div class="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                    <img src="{{ image.image.url }}" 
+                         alt="{{ image.caption|default:project.title }}"
+                         class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Related Projects -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Other Projects</h2>
+        
+        {% comment %}
+        <!-- This would require adding a method to get related projects in the view -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Related projects would go here -->
+        </div>
+        {% endcomment %}
+        
+        <div class="text-center">
+            <a href="{% url 'portfolio:portfolio' %}" 
+               class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Portfolio
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prose h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #1f2937;
+    }
+    
+    .prose h4 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #374151;
+    }
+    
+    .prose ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    .prose ol {
+        list-style-type: decimal;
+        padding-left: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    .prose li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .prose p {
+        margin-bottom: 1rem;
+        line-height: 1.7;
+    }
+    
+    .prose blockquote {
+        border-left: 4px solid #3b82f6;
+        padding-left: 1rem;
+        font-style: italic;
+        color: #6b7280;
+        margin: 1.5rem 0;
+    }
+    
+    .prose code {
+        background-color: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        color: #d97706;
+    }
+    
+    .prose pre {
+        background-color: #1f2937;
+        color: #f9fafb;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+</style>
+{% endblock %}

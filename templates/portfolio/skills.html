@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Skills & Expertise - Technical Proficiencies{% endblock %}
+{% block og_title %}Skills & Expertise - Technical Proficiencies{% endblock %}
+{% block twitter_title %}Skills & Expertise - Technical Proficiencies{% endblock %}
+
+{% block meta_description %}Explore my technical skills, expertise, and proficiency levels across various programming languages, frameworks, and technologies.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">
+            Skills & Expertise
+        </h1>
+        <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+            A comprehensive overview of my technical skills and proficiency levels
+        </p>
+    </div>
+</section>
+
+<!-- Skills Overview -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if skills_by_type %}
+            {% for skill_type, skill_list in skills_by_type.items %}
+            <div class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+                    {{ skill_type }}
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for skill in skill_list %}
+                    <div class="bg-gray-50 p-6 rounded-lg hover:shadow-lg transition duration-300">
+                        <div class="flex items-center mb-4">
+                            {% if skill.icon %}
+                            <div class="w-12 h-12 mr-4">
+                                <img src="{{ skill.icon.url }}" 
+                                     alt="{{ skill.name }} icon" 
+                                     class="w-full h-full object-contain">
+                            </div>
+                            {% else %}
+                            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-code text-primary-600 text-xl"></i>
+                            </div>
+                            {% endif %}
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900">
+                                    {{ skill.name }}
+                                </h3>
+                                <p class="text-sm text-gray-600">
+                                    {{ skill.get_proficiency_level_display }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Proficiency Bar -->
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">Proficiency</span>
+                                <span class="text-sm text-gray-600">{{ skill.proficiency_percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="h-2 rounded-full transition-all duration-500 skill-progress-bar
+                                    {% if skill.proficiency_level == 'expert' %}bg-green-500
+                                    {% elif skill.proficiency_level == 'advanced' %}bg-blue-500
+                                    {% elif skill.proficiency_level == 'intermediate' %}bg-yellow-500
+                                    {% elif skill.proficiency_level == 'beginner' %}bg-red-500
+                                    {% else %}bg-gray-500{% endif %}"
+                                     data-width="{{ skill.proficiency_percentage }}"></div>
+                            </div>
+                        </div>
+                        
+                        {% if skill.description %}
+                        <p class="text-gray-700 text-sm mb-4">
+                            {{ skill.description|truncatewords:20 }}
+                        </p>
+                        {% endif %}
+                        
+                        {% if skill.years_of_experience %}
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>{{ skill.years_of_experience }} year{{ skill.years_of_experience|pluralize }} experience</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-tools text-gray-300 text-6xl mb-4"></i>
+            <p class="text-gray-500 text-lg">No skills available yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Skills Summary -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                Skills Summary
+            </h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                A quick overview of my expertise across different technology areas
+            </p>
+        </div>
+        
+        {% if skills %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Skills by proficiency level -->
+            {% regroup skills by proficiency_level as proficiency_groups %}
+            {% for proficiency in proficiency_groups %}
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center
+                    {% if proficiency.grouper == 'expert' %}bg-green-100
+                    {% elif proficiency.grouper == 'advanced' %}bg-blue-100
+                    {% elif proficiency.grouper == 'intermediate' %}bg-yellow-100
+                    {% elif proficiency.grouper == 'beginner' %}bg-red-100
+                    {% else %}bg-gray-100{% endif %}">
+                    <i class="fas 
+                        {% if proficiency.grouper == 'expert' %}fa-star text-green-600
+                        {% elif proficiency.grouper == 'advanced' %}fa-trophy text-blue-600
+                        {% elif proficiency.grouper == 'intermediate' %}fa-medal text-yellow-600
+                        {% elif proficiency.grouper == 'beginner' %}fa-seedling text-red-600
+                        {% else %}fa-circle text-gray-600{% endif %} text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2 capitalize">
+                    {{ proficiency.grouper }} Level
+                </h3>
+                <p class="text-3xl font-bold text-primary-600 mb-2">
+                    {{ proficiency.list|length }}
+                </p>
+                <p class="text-gray-600 text-sm">
+                    Skill{{ proficiency.list|length|pluralize }}
+                </p>
+                
+                <!-- Preview of skills -->
+                <div class="mt-4">
+                    {% for skill in proficiency.list|slice:":3" %}
+                    <span class="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs mr-1 mb-1">
+                        {{ skill.name }}
+                    </span>
+                    {% endfor %}
+                    {% if proficiency.list|length > 3 %}
+                    <span class="text-gray-500 text-xs">+{{ proficiency.list|length|add:"-3" }} more</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Featured Skills -->
+{% if skills %}
+<section class="py-16 bg-primary-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-white mb-4">
+                Most Proficient Skills
+            </h2>
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                The technologies I work with most confidently
+            </p>
+        </div>
+        
+        <!-- Show top skills by proficiency -->
+        {% with expert_skills=skills|dictsort:"proficiency_percentage"|slice:":8" %}
+        {% if expert_skills %}
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+            {% for skill in expert_skills reversed %}
+            <div class="text-center">
+                {% if skill.icon %}
+                <div class="w-16 h-16 mx-auto mb-3">
+                    <img src="{{ skill.icon.url }}" 
+                         alt="{{ skill.name }}" 
+                         class="w-full h-full object-contain filter brightness-0 invert">
+                </div>
+                {% else %}
+                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-code text-white text-2xl"></i>
+                </div>
+                {% endif %}
+                <h3 class="text-white font-medium text-sm">{{ skill.name }}</h3>
+                <p class="text-blue-200 text-xs">{{ skill.proficiency_percentage }}%</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            Ready to Work Together?
+        </h2>
+        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Let's discuss how my skills can help bring your project to life
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'portfolio:portfolio' %}" 
+               class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-briefcase mr-2"></i>
+                View Portfolio
+            </a>
+            <a href="{% url 'portfolio:experience' %}" 
+               class="border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white px-8 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-user-tie mr-2"></i>
+                View Experience
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom animations for skill bars */
+    .skill-progress-bar {
+        width: 0%;
+        animation: fillBar 1.5s ease-in-out forwards;
+    }
+    
+    @keyframes fillBar {
+        from {
+            width: 0%;
+        }
+        to {
+            width: var(--target-width);
+        }
+    }
+    
+    /* Hover effects for skill cards */
+    .skill-card:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Responsive grid adjustments */
+    @media (max-width: 640px) {
+        .grid-cols-8 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set skill bar widths and add scroll animations
+    const skillBars = document.querySelectorAll('.skill-progress-bar');
+    skillBars.forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width') + '%';
+        bar.style.setProperty('--target-width', targetWidth);
+    });
+    
+    // Add scroll animations for skill bars
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const progressBars = entry.target.querySelectorAll('.skill-progress-bar');
+                progressBars.forEach(bar => {
+                    bar.style.animation = 'none';
+                    bar.offsetHeight; // Trigger reflow
+                    bar.style.animation = 'fillBar 1.5s ease-in-out forwards';
+                });
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all skill sections
+    document.querySelectorAll('.grid').forEach(section => {
+        observer.observe(section);
+    });
+});
+</script>
+{% endblock %}

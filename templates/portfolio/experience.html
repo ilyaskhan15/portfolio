@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Experience & Education - Professional Journey{% endblock %}
+{% block og_title %}Experience & Education - Professional Journey{% endblock %}
+{% block twitter_title %}Experience & Education - Professional Journey{% endblock %}
+
+{% block meta_description %}Explore my professional experience, career journey, educational background, and key achievements in web development and technology.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">
+            Experience & Education
+        </h1>
+        <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+            My professional journey, achievements, and educational foundation
+        </p>
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Professional Experience
+            </h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                A timeline of my career progression, key responsibilities, and notable achievements
+            </p>
+        </div>
+
+        {% if experiences %}
+        <div class="relative">
+            <!-- Timeline line -->
+            <div class="absolute left-4 md:left-1/2 transform md:-translate-x-px top-0 bottom-0 w-0.5 bg-gray-300"></div>
+            
+            {% for experience in experiences %}
+            <div class="relative flex items-center mb-12 {% cycle 'md:flex-row' 'md:flex-row-reverse' %}">
+                <!-- Timeline dot -->
+                <div class="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary-600 rounded-full border-4 border-white shadow-lg z-10"></div>
+                
+                <!-- Content -->
+                <div class="ml-12 md:ml-0 md:w-1/2 {% cycle 'md:pr-8' 'md:pl-8' %}">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                    {{ experience.position }}
+                                </h3>
+                                <p class="text-lg font-medium text-primary-600 mb-2">
+                                    {{ experience.company }}
+                                </p>
+                                <div class="flex items-center text-sm text-gray-500 mb-3">
+                                    <i class="fas fa-calendar-alt mr-2"></i>
+                                    <span>{{ experience.start_date|date:"M Y" }} - 
+                                        {% if experience.is_current %}
+                                            Present
+                                        {% else %}
+                                            {{ experience.end_date|date:"M Y" }}
+                                        {% endif %}
+                                        ({{ experience.duration }})
+                                    </span>
+                                </div>
+                                {% if experience.location %}
+                                <div class="flex items-center text-sm text-gray-500 mb-3">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    <span>{{ experience.location }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% if experience.company_logo %}
+                            <img src="{{ experience.company_logo.url }}" 
+                                 alt="{{ experience.company }} logo" 
+                                 class="w-16 h-16 object-contain rounded-lg">
+                            {% endif %}
+                        </div>
+                        
+                        {% if experience.description %}
+                        <div class="text-gray-700 mb-4 prose prose-sm max-w-none">
+                            {{ experience.description|safe }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if experience.technologies.all %}
+                        <div class="flex flex-wrap gap-2">
+                            {% for tech in experience.technologies.all %}
+                            <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium">
+                                {{ tech.name }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-briefcase text-gray-300 text-6xl mb-4"></i>
+            <p class="text-gray-500 text-lg">No experience entries available yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Education Section -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Education
+            </h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                My academic background and continuous learning journey
+            </p>
+        </div>
+
+        {% if education %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for edu in education %}
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                {% if edu.institution_logo %}
+                <div class="flex justify-center mb-4">
+                    <img src="{{ edu.institution_logo.url }}" 
+                         alt="{{ edu.institution }} logo" 
+                         class="w-20 h-20 object-contain">
+                </div>
+                {% endif %}
+                
+                <div class="text-center">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">
+                        {{ edu.degree }}
+                    </h3>
+                    {% if edu.field_of_study %}
+                    <p class="text-lg text-primary-600 mb-2">
+                        {{ edu.field_of_study }}
+                    </p>
+                    {% endif %}
+                    <p class="text-lg font-medium text-gray-700 mb-3">
+                        {{ edu.institution }}
+                    </p>
+                    <div class="text-sm text-gray-500 mb-3">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        {{ edu.start_date|date:"Y" }} - 
+                        {% if edu.is_current %}
+                            Present
+                        {% else %}
+                            {{ edu.end_date|date:"Y" }}
+                        {% endif %}
+                    </div>
+                    
+                    {% if edu.gpa %}
+                    <div class="flex items-center justify-center text-sm text-gray-600 mb-3">
+                        <i class="fas fa-star mr-2 text-yellow-500"></i>
+                        <span>GPA: {{ edu.gpa }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if edu.location %}
+                    <div class="flex items-center justify-center text-sm text-gray-500 mb-4">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        <span>{{ edu.location }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if edu.description %}
+                <div class="text-gray-700 text-sm mt-4 prose prose-sm max-w-none">
+                    {{ edu.description|safe }}
+                </div>
+                {% endif %}
+                
+                {% if edu.achievements %}
+                <div class="mt-4">
+                    <h4 class="font-semibold text-gray-900 mb-2">Key Achievements:</h4>
+                    <div class="text-sm text-gray-700 prose prose-sm max-w-none">
+                        {{ edu.achievements|safe }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-graduation-cap text-gray-300 text-6xl mb-4"></i>
+            <p class="text-gray-500 text-lg">No education entries available yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-16 bg-primary-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+            Interested in Working Together?
+        </h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+            Let's discuss how my experience and skills can contribute to your next project
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'portfolio:resume_download' %}" 
+               class="bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-download mr-2"></i>
+                Download Resume
+            </a>
+            <a href="{% url 'portfolio:portfolio' %}" 
+               class="border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-briefcase mr-2"></i>
+                View Portfolio
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prose h4 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .prose ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+    }
+    
+    .prose li {
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Timeline responsive adjustments */
+    @media (max-width: 768px) {
+        .absolute.left-4 {
+            left: 1rem;
+        }
+        .ml-12 {
+            margin-left: 3rem;
+        }
+    }
+</style>
+{% endblock %}

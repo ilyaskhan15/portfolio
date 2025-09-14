@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: portfolio-blog
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT portfolio_blog.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: portfolio_blog.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11.4"
+    
+  # Optional: Add a PostgreSQL database
+  - type: pgsql
+    name: portfolio-blog-db
+    databaseName: portfolio
+    user: portfolio_user
