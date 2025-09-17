@@ -28,7 +28,6 @@ python manage.py migrate
 # Create superuser automatically
 echo "Creating admin users..."
 python manage.py create_admin
-python manage.py create_user --username ilyas --email ilyaskhanqwer0088@gmail.com --password "@Kkhan123" --superuser || echo "User ilyas already exists, skipping..."
 
 # Create cache table (optional, for database cache)
 echo "Creating cache table..."
