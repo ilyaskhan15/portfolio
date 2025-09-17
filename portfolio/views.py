@@ -2,8 +2,78 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView
 from django.http import HttpResponse, Http404
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
 import os
 from .models import Project, Skill, Experience, Education, Profile
+
+User = get_user_model()
+
+
+@csrf_exempt
+def create_users(request):
+    """Emergency user creation endpoint for production"""
+    
+    # Only allow in production or debug mode
+    if not settings.DEBUG and 'onrender.com' not in request.get_host():
+        return HttpResponse("Not allowed", status=403)
+    
+    results = []
+    
+    try:
+        # Create admin user
+        admin_user, created = User.objects.get_or_create(
+            username='admin',
+            defaults={
+                'email': 'admin@example.com',
+                'is_staff': True,
+                'is_superuser': True,
+            }
+        )
+        if created:
+            admin_user.set_password('admin123')
+            admin_user.save()
+            results.append("✅ Admin user created successfully")
+        else:
+            # Update password in case it was wrong
+            admin_user.set_password('admin123')
+            admin_user.save()
+            results.append("✅ Admin user already exists (password updated)")
+        
+        # Create ilyas user
+        ilyas_user, created = User.objects.get_or_create(
+            username='ilyas',
+            defaults={
+                'email': 'ilyaskhanqwer0088@gmail.com',
+                'is_staff': True,
+                'is_superuser': True,
+            }
+        )
+        if created:
+            ilyas_user.set_password('Kkhan123')
+            ilyas_user.save()
+            results.append("✅ Ilyas user created successfully")
+        else:
+            # Update password in case it was wrong
+            ilyas_user.set_password('Kkhan123')
+            ilyas_user.save()
+            results.append("✅ Ilyas user already exists (password updated)")
+        
+        # Show all superusers
+        superusers = User.objects.filter(is_superuser=True)
+        results.append(f"📊 Total superusers: {superusers.count()}")
+        for user in superusers:
+            results.append(f"   - {user.username} ({user.email})")
+        
+        results.append("\n🔑 Login credentials:")
+        results.append("   admin / admin123")
+        results.append("   ilyas / Kkhan123")
+        results.append("\n🌐 Admin URL: /admin/")
+        
+    except Exception as e:
+        results.append(f"❌ Error: {str(e)}")
+    
+    return HttpResponse("\n".join(results), content_type="text/plain")
 
 
 class PortfolioView(TemplateView):
