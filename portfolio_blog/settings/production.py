@@ -12,11 +12,13 @@ ALLOWED_HOSTS = []
 if config('ALLOWED_HOSTS', default=''):
     ALLOWED_HOSTS.extend(config('ALLOWED_HOSTS', default='').split(','))
 
-# Add default Render.com domains
+# Add default Render.com domains and custom domain
 ALLOWED_HOSTS.extend([
     '.onrender.com',
     'localhost',
     '127.0.0.1',
+    'muhammadilyas.tech',
+    'www.muhammadilyas.tech',
 ])
 
 # Remove any empty strings and duplicates
@@ -73,8 +75,8 @@ SERVER_EMAIL = config('SERVER_EMAIL', default='noreply@yoursite.com')
 # CORS settings for production
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    "https://yourdomain.com",
-    "https://www.yourdomain.com",
+    "https://muhammadilyas.tech",
+    "https://www.muhammadilyas.tech",
 ]
 
 # Additional security headers
