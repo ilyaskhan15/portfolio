@@ -48,16 +48,21 @@ class Skill(models.Model):
 
     def optimize_icon(self):
         """Optimize skill icon"""
-        if self.icon and os.path.exists(self.icon.path):
-            img = Image.open(self.icon.path)
-            if img.mode != 'RGBA':
-                img = img.convert('RGBA')
-            
-            # Resize to standard icon size
-            max_size = (64, 64)
-            if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
-                img.thumbnail(max_size, Image.Resampling.LANCZOS)
-                img.save(self.icon.path, 'PNG', optimize=True)
+        try:
+            if self.icon and os.path.exists(self.icon.path):
+                img = Image.open(self.icon.path)
+                if img.mode != 'RGBA':
+                    img = img.convert('RGBA')
+                
+                # Resize to standard icon size
+                max_size = (64, 64)
+                if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    img.save(self.icon.path, 'PNG', optimize=True)
+        except Exception as e:
+            # Log the error but don't fail the save operation
+            print(f"Error optimizing icon: {e}")
+            pass
 
 
 class Project(models.Model):
@@ -153,17 +158,22 @@ class Project(models.Model):
 
     def optimize_project_image(self, image_field):
         """Optimize project images"""
-        if image_field and os.path.exists(image_field.path):
-            img = Image.open(image_field.path)
-            
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-            
-            # Resize if too large
-            max_size = (1200, 800)
-            if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
-                img.thumbnail(max_size, Image.Resampling.LANCZOS)
-                img.save(image_field.path, 'JPEG', quality=85, optimize=True)
+        try:
+            if image_field and os.path.exists(image_field.path):
+                img = Image.open(image_field.path)
+                
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Resize if too large
+                max_size = (1200, 800)
+                if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    img.save(image_field.path, 'JPEG', quality=85, optimize=True)
+        except Exception as e:
+            # Log the error but don't fail the save operation
+            print(f"Error optimizing image: {e}")
+            pass
 
     def get_absolute_url(self):
         return reverse('portfolio:project_detail', kwargs={'slug': self.slug})
@@ -297,18 +307,23 @@ class Profile(models.Model):
 
     def optimize_profile_image(self):
         """Optimize profile image"""
-        if self.profile_image and os.path.exists(self.profile_image.path):
-            img = Image.open(self.profile_image.path)
-            
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-            
-            # Make square and resize
-            size = min(img.size)
-            img = img.crop(((img.width - size) // 2, (img.height - size) // 2, 
-                           (img.width + size) // 2, (img.height + size) // 2))
-            
-            max_size = (400, 400)
-            if img.size[0] > max_size[0]:
-                img.thumbnail(max_size, Image.Resampling.LANCZOS)
-                img.save(self.profile_image.path, 'JPEG', quality=90, optimize=True)
+        try:
+            if self.profile_image and os.path.exists(self.profile_image.path):
+                img = Image.open(self.profile_image.path)
+                
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Make square and resize
+                size = min(img.size)
+                img = img.crop(((img.width - size) // 2, (img.height - size) // 2, 
+                               (img.width + size) // 2, (img.height + size) // 2))
+                
+                max_size = (400, 400)
+                if img.size[0] > max_size[0]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    img.save(self.profile_image.path, 'JPEG', quality=90, optimize=True)
+        except Exception as e:
+            # Log the error but don't fail the save operation
+            print(f"Error optimizing profile image: {e}")
+            pass
