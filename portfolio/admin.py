@@ -188,7 +188,7 @@ class ProjectAdmin(admin.ModelAdmin):
     duration_display.short_description = 'Duration'
     
     def is_ongoing_display(self, obj):
-        return 'Yes' if obj.is_ongoing else 'No'
+        return obj.is_ongoing
     is_ongoing_display.short_description = 'Ongoing Project'
     is_ongoing_display.boolean = True
     
