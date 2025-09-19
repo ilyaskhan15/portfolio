@@ -98,7 +98,9 @@ class Project(models.Model):
     # Media
     featured_image = models.ImageField(
         upload_to='portfolio/projects/%Y/%m/',
-        help_text="Main project screenshot (recommended: 1200x800px)"
+        help_text="Main project screenshot (recommended: 1200x800px)",
+        blank=True,
+        null=True
     )
     featured_image_alt = models.CharField(max_length=255, blank=True)
     

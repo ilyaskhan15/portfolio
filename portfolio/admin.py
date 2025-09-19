@@ -161,19 +161,25 @@ class ProjectAdmin(admin.ModelAdmin):
     
     def featured_image_preview(self, obj):
         if obj.featured_image:
-            return format_html(
-                '<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />',
-                obj.featured_image.url
-            )
+            try:
+                return format_html(
+                    '<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />',
+                    obj.featured_image.url
+                )
+            except:
+                return 'Image error'
         return 'No image'
     featured_image_preview.short_description = 'Image'
     
     def featured_image_preview_large(self, obj):
         if obj.featured_image:
-            return format_html(
-                '<img src="{}" style="max-width: 300px; max-height: 200px; object-fit: cover; border-radius: 8px;" />',
-                obj.featured_image.url
-            )
+            try:
+                return format_html(
+                    '<img src="{}" style="max-width: 300px; max-height: 200px; object-fit: cover; border-radius: 8px;" />',
+                    obj.featured_image.url
+                )
+            except:
+                return 'Image error'
         return 'No featured image uploaded'
     featured_image_preview_large.short_description = 'Featured Image Preview'
     
