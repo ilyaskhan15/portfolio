@@ -33,6 +33,10 @@ python manage.py migrate
 echo "Creating admin users..."
 python manage.py create_admin
 
+# Create test blog posts
+echo "Creating test blog posts..."
+python manage.py create_test_posts
+
 # Create cache table (optional, for database cache)
 echo "Creating cache table..."
 python manage.py createcachetable || echo "Cache table creation failed, continuing..."
