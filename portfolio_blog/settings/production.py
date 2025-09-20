@@ -123,3 +123,53 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+
+# Add 'storages' to INSTALLED_APPS
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'blog',
+    'portfolio',
+    'ckeditor',
+    'taggit',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'storages',  # Add this line
+]
+
+# DigitalOcean Spaces Configuration
+USE_DO_SPACES = os.environ.get('USE_DO_SPACES', 'False').lower() == 'true'
+
+if USE_DO_SPACES:
+    # DigitalOcean Spaces settings (S3-compatible)
+    AWS_ACCESS_KEY_ID = os.environ.get('DO_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('DO_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('DO_SPACE_NAME')
+    AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+    AWS_S3_REGION_NAME = 'nyc3'
+    
+    # Storage Configuration
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    # URL Configuration (CDN for faster loading)
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.nyc3.cdn.digitaloceanspaces.com'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+    
+    # Spaces Settings
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+else:
+    # Local storage fallback
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
