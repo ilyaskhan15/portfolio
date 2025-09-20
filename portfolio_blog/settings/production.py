@@ -149,7 +149,7 @@ USE_DO_SPACES = os.environ.get('USE_DO_SPACES', 'False').lower() == 'true'
 if USE_DO_SPACES:
     # DigitalOcean Spaces settings (S3-compatible)
     AWS_ACCESS_KEY_ID = os.environ.get('DO_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.environ.get('DO_SECRET_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('DO_SECRET_ACCESS_KEY') 
     AWS_STORAGE_BUCKET_NAME = os.environ.get('DO_SPACE_NAME')
     AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
     AWS_S3_REGION_NAME = 'nyc3'
