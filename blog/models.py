@@ -128,18 +128,23 @@ class Post(models.Model):
 
     def optimize_image(self):
         """Optimize featured image for web"""
-        if self.featured_image and os.path.exists(self.featured_image.path):
-            img = Image.open(self.featured_image.path)
-            
-            # Convert to RGB if necessary
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-            
-            # Resize if too large
-            max_size = (1200, 630)
-            if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
-                img.thumbnail(max_size, Image.Resampling.LANCZOS)
-                img.save(self.featured_image.path, 'JPEG', quality=85, optimize=True)
+        try:
+            if self.featured_image and os.path.exists(self.featured_image.path):
+                img = Image.open(self.featured_image.path)
+                
+                # Convert to RGB if necessary
+                if img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Resize if too large
+                max_size = (1200, 630)
+                if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    img.save(self.featured_image.path, 'JPEG', quality=85, optimize=True)
+        except Exception as e:
+            # Log the error but don't fail the save operation
+            print(f"Error optimizing blog image: {e}")
+            pass
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
