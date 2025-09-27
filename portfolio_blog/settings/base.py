@@ -161,6 +161,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Site ID for django.contrib.sites
 SITE_ID = 1
+SITE_NAME = config('SITE_NAME', default='Portfolio & Blog')
+SITE_DOMAIN = config('SITE_DOMAIN', default='muhammadilyas.tech')
 
 # Django REST Framework
 REST_FRAMEWORK = {
