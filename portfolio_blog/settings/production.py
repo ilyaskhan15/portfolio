@@ -9,14 +9,15 @@ DEBUG = False
 ALLOWED_HOSTS = []
 
 # Add specific domain from environment variable if provided
-if config('ALLOWED_HOSTS', default=''):
-    ALLOWED_HOSTS.extend(config('ALLOWED_HOSTS', default='').split(','))
+env_allowed_hosts = [host.strip() for host in config('ALLOWED_HOSTS', default='').split(',') if host.strip()]
+ALLOWED_HOSTS.extend(env_allowed_hosts)
 
 # Add default Render.com domains and custom domain
 ALLOWED_HOSTS.extend([
     '.onrender.com',
     'localhost',
     '127.0.0.1',
+    '0.0.0.0',
     'muhammadilyas.tech',
     'www.muhammadilyas.tech',
 ])
