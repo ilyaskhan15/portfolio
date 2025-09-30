@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 from decouple import config
-import dj_database_url
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -43,6 +44,10 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.sitemaps",
 ]
+
+SITE_DOMAIN = 'muhammadilyas.tech'
+SITE_NAME = 'Muhammad Ilyas'
+
 
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -146,6 +151,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = config('MEDIA_URL', default='/media/')
