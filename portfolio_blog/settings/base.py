@@ -40,7 +40,6 @@ DJANGO_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
 ]
@@ -50,7 +49,7 @@ SITE_NAME = 'Muhammad Ilyas'
 
 
 THIRD_PARTY_APPS = [
-    'cloudinary_storage',
+    'cloudinary_storage',  # Must be before django.contrib.staticfiles
     'cloudinary',
     'rest_framework',
     'taggit',
@@ -70,7 +69,8 @@ LOCAL_APPS = [
     'portfolio',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+# Important: cloudinary_storage must come before django.contrib.staticfiles
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + ['django.contrib.staticfiles'] + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -156,19 +156,30 @@ STATICFILES_DIRS = [
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
-MEDIA_URL = config('MEDIA_URL', default='/media/')
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# Cloudinary Configuration
+# Cloudinary Configuration (must come before MEDIA_URL/MEDIA_ROOT)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
     'API_KEY': config('CLOUDINARY_API_KEY', default=''),
     'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
 }
 
-# Use Cloudinary for media files storage
+# Django 5.1+ Storage Configuration
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Legacy setting for compatibility (Django < 4.2)
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Media files - Cloudinary will override these
+# Only needed as fallback for development without Cloudinary
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # WhiteNoise configuration for production
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
