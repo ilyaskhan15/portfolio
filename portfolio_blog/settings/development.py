@@ -1,4 +1,5 @@
 from .base import *
+import dj_database_url
 
 # Development-specific settings
 DEBUG = True

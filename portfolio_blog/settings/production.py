@@ -49,6 +49,9 @@ CORS_ALLOWED_ORIGINS = [
     'https://www.muhammadilyas.tech',
 ]
 
+# ✅ Site ID for django.contrib.sites
+SITE_ID = 1
+
 # ✅ Logging (Optional but safe)
 LOGGING = {
     'version': 1,
