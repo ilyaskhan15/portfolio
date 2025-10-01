@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 from django.http import HttpResponse, Http404, FileResponse
 from django.conf import settings
@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 import os
 import mimetypes
+import urllib.parse
 from .models import Project, Skill, Experience, Education, Profile
 
 User = get_user_model()
@@ -199,9 +200,32 @@ class ResumeDownloadView(TemplateView):
             if profile and profile.resume:
                 # Check if file is stored on Cloudinary
                 if hasattr(profile.resume, 'url') and 'cloudinary' in profile.resume.url:
-                    # For Cloudinary files, redirect to the direct URL
+                    # For Cloudinary files, force download by modifying URL
                     from django.shortcuts import redirect
-                    return redirect(profile.resume.url)
+                    import urllib.parse
+                    
+                    # Get the Cloudinary URL
+                    cloudinary_url = profile.resume.url
+                    
+                    # Parse the URL to add fl_attachment flag for forced download
+                    # This makes Cloudinary serve it as a download instead of trying to display
+                    if '/upload/' in cloudinary_url:
+                        # Add fl_attachment flag to force download
+                        cloudinary_url = cloudinary_url.replace('/upload/', '/upload/fl_attachment/')
+                    
+                    # Get file extension for proper filename
+                    file_ext = os.path.splitext(profile.resume.name)[1] or '.pdf'
+                    filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
+                    
+                    # Add filename to URL if possible
+                    if '/upload/' in cloudinary_url and '?' not in cloudinary_url:
+                        # Extract the file path after version (if exists)
+                        parts = cloudinary_url.split('/upload/')
+                        if len(parts) == 2:
+                            # Reconstruct URL with attachment flag and filename
+                            cloudinary_url = f"{parts[0]}/upload/fl_attachment:{urllib.parse.quote(filename)}/{parts[1]}"
+                    
+                    return redirect(cloudinary_url)
                 
                 # For local files
                 if hasattr(profile.resume, 'path') and os.path.exists(profile.resume.path):
@@ -214,7 +238,7 @@ class ResumeDownloadView(TemplateView):
                     
                     # Get file extension
                     file_ext = os.path.splitext(file_path)[1]
-                    filename = f"{profile.full_name}_Resume{file_ext}"
+                    filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
                     
                     # Open and return file
                     file_handle = open(file_path, 'rb')
