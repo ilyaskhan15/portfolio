@@ -40,6 +40,7 @@ DJANGO_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.sitemaps",
 ]
@@ -49,7 +50,7 @@ SITE_NAME = 'Muhammad Ilyas'
 
 
 THIRD_PARTY_APPS = [
-    'cloudinary_storage',  # Must be before django.contrib.staticfiles
+    'cloudinary_storage',  # For media files only
     'cloudinary',
     'rest_framework',
     'taggit',
@@ -69,8 +70,8 @@ LOCAL_APPS = [
     'portfolio',
 ]
 
-# Important: cloudinary_storage must come before django.contrib.staticfiles
-INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + ['django.contrib.staticfiles'] + LOCAL_APPS
+# Standard Django apps order
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -154,8 +155,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # Cloudinary Configuration (must come before MEDIA_URL/MEDIA_ROOT)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
@@ -169,10 +168,13 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        # Use Django's default static storage - WhiteNoise handles it via middleware
+        # Default static files storage - will be overridden in production
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+# Legacy setting for compatibility with packages that check for it
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Legacy setting for compatibility (Django < 4.2)
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -181,10 +183,6 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Only needed as fallback for development without Cloudinary
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# WhiteNoise configuration for production - handled by middleware
-# No need for STATICFILES_STORAGE as WhiteNoise middleware handles serving
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
