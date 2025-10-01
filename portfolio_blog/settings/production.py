@@ -31,8 +31,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# Media files will use Cloudinary (configured in base.py)
+# No need to set MEDIA_URL and MEDIA_ROOT here - Cloudinary handles it
 
 # ✅ Security (HTTPS)
 SECURE_SSL_REDIRECT = True
