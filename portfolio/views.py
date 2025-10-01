@@ -1,13 +1,54 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, FileResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 import os
+import mimetypes
 from .models import Project, Skill, Experience, Education, Profile
 
 User = get_user_model()
+
+
+class HomeView(TemplateView):
+    """Dynamic homepage with latest content"""
+    template_name = 'home.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get profile
+        try:
+            context['profile'] = Profile.objects.filter(is_active=True).first()
+        except Profile.DoesNotExist:
+            context['profile'] = None
+        
+        # Get latest project
+        context['latest_project'] = Project.objects.filter(
+            status='published'
+        ).order_by('-created_at').first()
+        
+        # Get latest football article (from blog app)
+        from blog.models import Post
+        context['latest_football_post'] = Post.objects.filter(
+            status='published',
+            category__name__iexact='football'
+        ).order_by('-published_at').first()
+        
+        # Get latest 2 technical articles
+        context['latest_tech_posts'] = Post.objects.filter(
+            status='published'
+        ).exclude(
+            category__name__iexact='football'
+        ).order_by('-published_at')[:2]
+        
+        # Get featured skills (for skills section)
+        context['featured_skills'] = Skill.objects.filter(
+            is_featured=True
+        ).order_by('order')[:6]
+        
+        return context
 
 
 @csrf_exempt
@@ -156,15 +197,36 @@ class ResumeDownloadView(TemplateView):
         try:
             profile = Profile.objects.filter(is_active=True).first()
             if profile and profile.resume:
-                file_path = profile.resume.path
-                if os.path.exists(file_path):
-                    with open(file_path, 'rb') as file:
-                        response = HttpResponse(file.read(), content_type='application/pdf')
-                        response['Content-Disposition'] = f'attachment; filename="{profile.full_name}_Resume.pdf"'
-                        return response
+                # Check if file is stored on Cloudinary
+                if hasattr(profile.resume, 'url') and 'cloudinary' in profile.resume.url:
+                    # For Cloudinary files, redirect to the direct URL
+                    from django.shortcuts import redirect
+                    return redirect(profile.resume.url)
+                
+                # For local files
+                if hasattr(profile.resume, 'path') and os.path.exists(profile.resume.path):
+                    file_path = profile.resume.path
+                    
+                    # Determine content type
+                    content_type, _ = mimetypes.guess_type(file_path)
+                    if not content_type:
+                        content_type = 'application/octet-stream'
+                    
+                    # Get file extension
+                    file_ext = os.path.splitext(file_path)[1]
+                    filename = f"{profile.full_name}_Resume{file_ext}"
+                    
+                    # Open and return file
+                    file_handle = open(file_path, 'rb')
+                    response = FileResponse(file_handle, content_type=content_type)
+                    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                    response['Content-Length'] = os.path.getsize(file_path)
+                    return response
         except Exception as e:
             # Log the error for debugging
             print(f"Resume download error: {e}")
+            import traceback
+            traceback.print_exc()
         
         # If no resume is found, render a template instead of raising 404
         return self.render_to_response(self.get_context_data())

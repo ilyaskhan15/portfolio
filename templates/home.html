@@ -112,78 +112,47 @@
 <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
-            <p class="text-xl text-gray-600">Some of my recent work</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Project</h2>
+            <p class="text-xl text-gray-600">My most recent work</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Project cards - these would be dynamically loaded from database -->
+        {% if latest_project %}
+        <div class="max-w-4xl mx-auto">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                <div class="h-48 bg-gray-200">
-                    <img src="{% static 'img/project-placeholder.jpg' %}" alt="Project 1" class="w-full h-full object-cover">
+                <div class="h-64 md:h-96 bg-gray-200">
+                    {% if latest_project.featured_image %}
+                        <img src="{{ latest_project.featured_image.url }}" alt="{{ latest_project.featured_image_alt|default:latest_project.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <img src="{% static 'img/project-placeholder.jpg' %}" alt="{{ latest_project.title }}" class="w-full h-full object-cover">
+                    {% endif %}
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">E-commerce Platform</h3>
-                    <p class="text-gray-600 mb-4">Full-stack e-commerce solution with Django and React.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Django</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">React</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">PostgreSQL</span>
+                <div class="p-8">
+                    <h3 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-3">{{ latest_project.title }}</h3>
+                    <p class="text-gray-600 mb-4 text-lg">{{ latest_project.short_description }}</p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        {% for tech in latest_project.technologies.all|slice:":5" %}
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">{{ tech.name }}</span>
+                        {% endfor %}
                     </div>
-                    <div class="flex justify-between items-center">
-                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">View Project</a>
-                        <div class="flex space-x-2">
-                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fab fa-github"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                <div class="h-48 bg-gray-200">
-                    <img src="{% static 'img/project-placeholder.jpg' %}" alt="Project 2" class="w-full h-full object-cover">
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Task Management App</h3>
-                    <p class="text-gray-600 mb-4">Collaborative task management with real-time updates.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Django</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">WebSockets</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Redis</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">View Project</a>
-                        <div class="flex space-x-2">
-                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fab fa-github"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                <div class="h-48 bg-gray-200">
-                    <img src="{% static 'img/project-placeholder.jpg' %}" alt="Project 3" class="w-full h-full object-cover">
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Data Analytics Dashboard</h3>
-                    <p class="text-gray-600 mb-4">Interactive dashboard for business intelligence.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">Python</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">D3.js</span>
-                        <span class="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full">MongoDB</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">View Project</a>
-                        <div class="flex space-x-2">
-                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fab fa-github"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-gray-600"><i class="fas fa-external-link-alt"></i></a>
+                    <div class="flex flex-wrap justify-between items-center gap-4">
+                        <a href="{% url 'portfolio:project_detail' latest_project.slug %}" class="text-primary-600 hover:text-primary-700 font-semibold text-lg">View Project Details →</a>
+                        <div class="flex space-x-4">
+                            {% if latest_project.github_url %}
+                            <a href="{{ latest_project.github_url }}" target="_blank" rel="noopener" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fab fa-github"></i></a>
+                            {% endif %}
+                            {% if latest_project.live_url %}
+                            <a href="{{ latest_project.live_url }}" target="_blank" rel="noopener" class="text-gray-400 hover:text-gray-600 text-xl"><i class="fas fa-external-link-alt"></i></a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="text-center text-gray-500">
+            <p class="text-lg">No projects available yet. Check back soon!</p>
+        </div>
+        {% endif %}
         
         <div class="text-center mt-12">
             <a href="{% url 'portfolio:portfolio' %}" class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition duration-200">
@@ -202,66 +171,70 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Blog post cards - these would be dynamically loaded from database -->
+            <!-- Latest Football Article -->
+            {% if latest_football_post %}
             <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition duration-300">
                 <div class="h-48 bg-gray-200">
-                    <img src="{% static 'img/blog-placeholder.jpg' %}" alt="Blog post" class="w-full h-full object-cover">
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center text-sm text-gray-500 mb-2">
-                        <span class="bg-primary-100 text-primary-700 px-2 py-1 rounded">Technical</span>
-                        <span class="ml-2">March 15, 2024</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600">
-                        <a href="#">Building Scalable Django Applications</a>
-                    </h3>
-                    <p class="text-gray-600 mb-4">Learn best practices for architecting Django applications that can scale with your business needs.</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">5 min read</span>
-                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
-                    </div>
-                </div>
-            </article>
-            
-            <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition duration-300">
-                <div class="h-48 bg-gray-200">
-                    <img src="{% static 'img/blog-placeholder.jpg' %}" alt="Blog post" class="w-full h-full object-cover">
+                    {% if latest_football_post.featured_image %}
+                        <img src="{{ latest_football_post.featured_image.url }}" alt="{{ latest_football_post.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <img src="{% static 'img/blog-placeholder.jpg' %}" alt="{{ latest_football_post.title }}" class="w-full h-full object-cover">
+                    {% endif %}
                 </div>
                 <div class="p-6">
                     <div class="flex items-center text-sm text-gray-500 mb-2">
                         <span class="bg-green-100 text-green-700 px-2 py-1 rounded">Football</span>
-                        <span class="ml-2">March 12, 2024</span>
+                        <span class="ml-2">{{ latest_football_post.published_at|date:"M d, Y" }}</span>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600">
-                        <a href="#">Tactical Analysis: Premier League Trends</a>
+                        <a href="{% url 'blog:post_detail' latest_football_post.slug %}">{{ latest_football_post.title }}</a>
                     </h3>
-                    <p class="text-gray-600 mb-4">Breaking down the latest tactical innovations in the Premier League this season.</p>
+                    <p class="text-gray-600 mb-4">{{ latest_football_post.excerpt|truncatewords:20 }}</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">8 min read</span>
-                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
+                        <span class="text-sm text-gray-500">{{ latest_football_post.reading_time }} min read</span>
+                        <a href="{% url 'blog:post_detail' latest_football_post.slug %}" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
                     </div>
                 </div>
             </article>
+            {% endif %}
             
+            <!-- Latest Technical Articles -->
+            {% for post in latest_tech_posts %}
             <article class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition duration-300">
                 <div class="h-48 bg-gray-200">
-                    <img src="{% static 'img/blog-placeholder.jpg' %}" alt="Blog post" class="w-full h-full object-cover">
+                    {% if post.featured_image %}
+                        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <img src="{% static 'img/blog-placeholder.jpg' %}" alt="{{ post.title }}" class="w-full h-full object-cover">
+                    {% endif %}
                 </div>
                 <div class="p-6">
                     <div class="flex items-center text-sm text-gray-500 mb-2">
+                        {% if post.category %}
+                        <span class="bg-primary-100 text-primary-700 px-2 py-1 rounded">{{ post.category.name }}</span>
+                        {% else %}
                         <span class="bg-primary-100 text-primary-700 px-2 py-1 rounded">Technical</span>
-                        <span class="ml-2">March 10, 2024</span>
+                        {% endif %}
+                        <span class="ml-2">{{ post.published_at|date:"M d, Y" }}</span>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600">
-                        <a href="#">Modern JavaScript ES2024 Features</a>
+                        <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
                     </h3>
-                    <p class="text-gray-600 mb-4">Exploring the latest JavaScript features and how they improve developer productivity.</p>
+                    <p class="text-gray-600 mb-4">{{ post.excerpt|truncatewords:20 }}</p>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">6 min read</span>
-                        <a href="#" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
+                        <span class="text-sm text-gray-500">{{ post.reading_time }} min read</span>
+                        <a href="{% url 'blog:post_detail' post.slug %}" class="text-primary-600 hover:text-primary-700 font-semibold">Read More</a>
                     </div>
                 </div>
             </article>
+            {% endfor %}
+            
+            <!-- Show placeholder if no posts -->
+            {% if not latest_football_post and not latest_tech_posts %}
+            <div class="col-span-3 text-center text-gray-500">
+                <p class="text-lg">No articles available yet. Check back soon!</p>
+            </div>
+            {% endif %}
         </div>
         
         <div class="text-center mt-12">
