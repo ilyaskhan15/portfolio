@@ -20,11 +20,25 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.static import serve
 from portfolio.views import HomeView
+import os
+
+# View to serve ads.txt file
+def serve_ads_txt(request):
+    """Serve ads.txt file for Google AdSense"""
+    from django.http import FileResponse, Http404
+    ads_txt_path = os.path.join(settings.BASE_DIR, 'static', 'ads.txt')
+    if os.path.exists(ads_txt_path):
+        return FileResponse(open(ads_txt_path, 'rb'), content_type='text/plain')
+    raise Http404("ads.txt not found")
 
 urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
+    
+    # Google AdSense ads.txt
+    path('ads.txt', serve_ads_txt, name='ads_txt'),
     
     # Homepage - Dynamic content
     path('', HomeView.as_view(), name='home'),
@@ -50,8 +64,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 else:
     # In production, serve media files via Django
-    from django.views.static import serve
-    import re
     urlpatterns += [
         re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     ]
