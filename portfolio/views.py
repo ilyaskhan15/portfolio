@@ -200,32 +200,35 @@ class ResumeDownloadView(TemplateView):
             if profile and profile.resume:
                 # Check if file is stored on Cloudinary
                 if hasattr(profile.resume, 'url') and 'cloudinary' in profile.resume.url:
-                    # For Cloudinary files, force download by modifying URL
+                    # For Cloudinary files, create proper download URL
                     from django.shortcuts import redirect
                     import urllib.parse
                     
-                    # Get the Cloudinary URL
+                    # Get the original Cloudinary URL
                     cloudinary_url = profile.resume.url
                     
-                    # Parse the URL to add fl_attachment flag for forced download
-                    # This makes Cloudinary serve it as a download instead of trying to display
-                    if '/upload/' in cloudinary_url:
-                        # Add fl_attachment flag to force download
-                        cloudinary_url = cloudinary_url.replace('/upload/', '/upload/fl_attachment/')
-                    
-                    # Get file extension for proper filename
+                    # Generate clean filename
                     file_ext = os.path.splitext(profile.resume.name)[1] or '.pdf'
                     filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
                     
-                    # Add filename to URL if possible
-                    if '/upload/' in cloudinary_url and '?' not in cloudinary_url:
-                        # Extract the file path after version (if exists)
-                        parts = cloudinary_url.split('/upload/')
-                        if len(parts) == 2:
-                            # Reconstruct URL with attachment flag and filename
-                            cloudinary_url = f"{parts[0]}/upload/fl_attachment:{urllib.parse.quote(filename)}/{parts[1]}"
+                    # Create proper Cloudinary download URL
+                    # Convert from /image/upload/ to /raw/upload/ for documents
+                    if '/image/upload/' in cloudinary_url:
+                        # Replace image/upload with raw/upload for documents
+                        download_url = cloudinary_url.replace('/image/upload/', '/raw/upload/')
+                    elif '/upload/' in cloudinary_url:
+                        # If it's already /raw/upload/ or similar, use as is
+                        download_url = cloudinary_url
+                    else:
+                        # Fallback: use original URL
+                        download_url = cloudinary_url
                     
-                    return redirect(cloudinary_url)
+                    # Add fl_attachment flag for forced download with proper syntax
+                    if '/raw/upload/' in download_url:
+                        # Insert fl_attachment flag in correct position
+                        download_url = download_url.replace('/raw/upload/', f'/raw/upload/fl_attachment/')
+                    
+                    return redirect(download_url)
                 
                 # For local files
                 if hasattr(profile.resume, 'path') and os.path.exists(profile.resume.path):
