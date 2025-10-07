@@ -7,14 +7,14 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # ✅ Allowed Hosts for Heroku + Custom Domain
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS', 
-    default='muhammadilyas.herokuapp.com,muhammadilyas.tech,www.muhammadilyas.tech',
+    default='localhost,127.0.0.1',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
 # ✅ CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='https://muhammadilyas.herokuapp.com,https://muhammadilyas.tech,https://www.muhammadilyas.tech',
+    default='https://localhost,https://127.0.0.1',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
@@ -64,7 +64,7 @@ X_FRAME_OPTIONS = 'DENY'
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='https://muhammadilyas.tech,https://www.muhammadilyas.tech',
+    default='https://localhost,https://127.0.0.1',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
