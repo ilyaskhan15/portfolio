@@ -202,7 +202,9 @@ class ResumeDownloadView(TemplateView):
                 if hasattr(profile.resume, 'url') and 'cloudinary' in profile.resume.url:
                     # For Cloudinary files, create proper download URL
                     from django.shortcuts import redirect
+                    from django.http import HttpResponse
                     import urllib.parse
+                    import requests
                     
                     # Get the original Cloudinary URL
                     cloudinary_url = profile.resume.url
@@ -211,24 +213,41 @@ class ResumeDownloadView(TemplateView):
                     file_ext = os.path.splitext(profile.resume.name)[1] or '.pdf'
                     filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
                     
-                    # Create proper Cloudinary download URL
-                    # Convert from /image/upload/ to /raw/upload/ for documents
+                    # Try multiple approaches for maximum compatibility
+                    download_urls = []
+                    
+                    # Method 1: Try /raw/upload/ with fl_attachment
                     if '/image/upload/' in cloudinary_url:
-                        # Replace image/upload with raw/upload for documents
-                        download_url = cloudinary_url.replace('/image/upload/', '/raw/upload/')
-                    elif '/upload/' in cloudinary_url:
-                        # If it's already /raw/upload/ or similar, use as is
-                        download_url = cloudinary_url
-                    else:
-                        # Fallback: use original URL
-                        download_url = cloudinary_url
+                        raw_url = cloudinary_url.replace('/image/upload/', '/raw/upload/fl_attachment/')
+                        download_urls.append(raw_url)
                     
-                    # Add fl_attachment flag for forced download with proper syntax
-                    if '/raw/upload/' in download_url:
-                        # Insert fl_attachment flag in correct position
-                        download_url = download_url.replace('/raw/upload/', f'/raw/upload/fl_attachment/')
+                    # Method 2: Try original URL with fl_attachment (for image/upload)
+                    if '/image/upload/' in cloudinary_url:
+                        image_download_url = cloudinary_url.replace('/image/upload/', '/image/upload/fl_attachment/')
+                        download_urls.append(image_download_url)
                     
-                    return redirect(download_url)
+                    # Method 3: Try with flags parameter
+                    if '/upload/' in cloudinary_url:
+                        parts = cloudinary_url.split('/upload/')
+                        if len(parts) == 2:
+                            flags_url = f"{parts[0]}/upload/fl_attachment/{parts[1]}"
+                            download_urls.append(flags_url)
+                    
+                    # Method 4: Original URL as fallback
+                    download_urls.append(cloudinary_url)
+                    
+                    # Try each URL and return the first working one
+                    for attempt_url in download_urls:
+                        try:
+                            # Quick HEAD request to check if URL exists
+                            response = requests.head(attempt_url, timeout=5)
+                            if response.status_code == 200:
+                                return redirect(attempt_url)
+                        except:
+                            continue
+                    
+                    # If none work, redirect to original URL anyway
+                    return redirect(cloudinary_url)
                 
                 # For local files
                 if hasattr(profile.resume, 'path') and os.path.exists(profile.resume.path):
