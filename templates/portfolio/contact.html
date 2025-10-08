@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact - Muhammad Ilyas{% endblock %}
+{% block og_title %}Contact Muhammad Ilyas - Let's Work Together{% endblock %}
+{% block twitter_title %}Contact Muhammad Ilyas - Let's Work Together{% endblock %}
+
+{% block meta_description %}Get in touch with Muhammad Ilyas for web development projects, collaborations, or technical consultations. Professional full-stack developer ready to help with your next project.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-green-900 via-blue-900 to-purple-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Let's Work Together
+            </h1>
+            <p class="text-xl md:text-2xl text-green-100 max-w-3xl mx-auto">
+                Ready to bring your ideas to life? Let's discuss how I can help with your next project
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Information -->
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">Get In Touch</h2>
+                
+                <div class="space-y-8">
+                    {% if profile %}
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-envelope text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Email</h3>
+                            <p class="text-gray-600">{{ profile.email }}</p>
+                            <a href="mailto:{{ profile.email }}" class="text-blue-600 hover:text-blue-700">Send me an email</a>
+                        </div>
+                    </div>
+                    
+                    {% if profile.phone %}
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-phone text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Phone</h3>
+                            <p class="text-gray-600">{{ profile.phone }}</p>
+                            <a href="tel:{{ profile.phone }}" class="text-green-600 hover:text-green-700">Call me</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if profile.location %}
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Location</h3>
+                            <p class="text-gray-600">{{ profile.location }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                
+                <!-- Social Links -->
+                {% if profile %}
+                <div class="mt-12">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-6">Connect With Me</h3>
+                    <div class="flex space-x-4">
+                        {% if profile.linkedin %}
+                        <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" 
+                           class="w-12 h-12 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition duration-200">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if profile.github %}
+                        <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer"
+                           class="w-12 h-12 bg-gray-800 text-white rounded-lg flex items-center justify-center hover:bg-gray-900 transition duration-200">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if profile.twitter %}
+                        <a href="{{ profile.twitter }}" target="_blank" rel="noopener noreferrer"
+                           class="w-12 h-12 bg-blue-400 text-white rounded-lg flex items-center justify-center hover:bg-blue-500 transition duration-200">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if profile.website %}
+                        <a href="{{ profile.website }}" target="_blank" rel="noopener noreferrer"
+                           class="w-12 h-12 bg-green-600 text-white rounded-lg flex items-center justify-center hover:bg-green-700 transition duration-200">
+                            <i class="fas fa-globe text-xl"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Contact Form -->
+            <div>
+                <div class="bg-gray-50 rounded-lg p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Send a Message</h3>
+                    
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name *</label>
+                            <input type="text" id="name" name="name" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                            <input type="email" id="email" name="email" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                            <textarea id="message" name="message" rows="5" required
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" 
+                                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <p class="text-sm text-gray-500 mt-4">
+                        * I typically respond within 24 hours
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Overview -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">How I Can Help</h2>
+            <p class="text-lg text-gray-600">Services I offer to bring your projects to life</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-code text-blue-600 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Web Development</h3>
+                <p class="text-gray-600">Full-stack web applications using Django, React, and modern technologies.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-mobile-alt text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">API Development</h3>
+                <p class="text-gray-600">RESTful APIs and backend services for mobile and web applications.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-cloud text-purple-600 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Cloud Deployment</h3>
+                <p class="text-gray-600">Deploy and scale applications on cloud platforms like Heroku and AWS.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

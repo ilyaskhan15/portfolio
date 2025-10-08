@@ -190,6 +190,36 @@ class ExperienceView(TemplateView):
         return context
 
 
+class AboutView(TemplateView):
+    """About page for AdSense compliance"""
+    template_name = 'portfolio/about.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = Profile.objects.filter(is_active=True).first()
+        return context
+
+
+class ContactView(TemplateView):
+    """Contact page for AdSense compliance"""
+    template_name = 'portfolio/contact.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = Profile.objects.filter(is_active=True).first()
+        return context
+
+
+class PrivacyView(TemplateView):
+    """Privacy Policy page for AdSense compliance"""
+    template_name = 'portfolio/privacy.html'
+
+
+class TermsView(TemplateView):
+    """Terms of Service page for AdSense compliance"""
+    template_name = 'portfolio/terms.html'
+
+
 class ResumeDownloadView(TemplateView):
     """Handle resume/CV download"""
     template_name = 'portfolio/resume_not_found.html'

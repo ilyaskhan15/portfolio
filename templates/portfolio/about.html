@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About - Muhammad Ilyas{% endblock %}
+{% block og_title %}About Muhammad Ilyas - Professional Developer{% endblock %}
+{% block twitter_title %}About Muhammad Ilyas - Professional Developer{% endblock %}
+
+{% block meta_description %}Learn about Muhammad Ilyas, a passionate full-stack developer with expertise in Django, React, and modern web technologies. Discover his journey, skills, and professional background.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                About Muhammad Ilyas
+            </h1>
+            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+                Passionate full-stack developer crafting digital solutions with modern technologies
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- About Content -->
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if profile and profile.profile_image %}
+        <div class="text-center mb-12">
+            <img src="{{ profile.profile_image.url }}" alt="Muhammad Ilyas" 
+                 class="w-48 h-48 rounded-full mx-auto mb-8 shadow-xl object-cover">
+        </div>
+        {% endif %}
+        
+        <div class="prose prose-lg max-w-none">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">My Journey</h2>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                Welcome to my corner of the internet! I'm Muhammad Ilyas, a passionate full-stack developer 
+                with a deep love for creating innovative web solutions. My journey in technology began with 
+                curiosity about how websites work, and it has evolved into a comprehensive expertise in 
+                modern web development.
+            </p>
+            
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">What I Do</h3>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                I specialize in building scalable web applications using cutting-edge technologies. My 
+                expertise spans across backend development with Django and Python, frontend development 
+                with React and modern JavaScript, and cloud deployment on platforms like Heroku and AWS.
+            </p>
+            
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">My Approach</h3>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                I believe in writing clean, maintainable code and creating user-centric applications. 
+                Every project I work on is approached with attention to detail, performance optimization, 
+                and scalability in mind. I'm constantly learning new technologies and best practices to 
+                deliver exceptional results.
+            </p>
+            
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">Technical Expertise</h3>
+            
+            <ul class="list-disc list-inside text-lg text-gray-700 mb-6 space-y-2">
+                <li><strong>Backend:</strong> Python, Django, REST APIs, PostgreSQL, MySQL</li>
+                <li><strong>Frontend:</strong> React, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS</li>
+                <li><strong>DevOps:</strong> Docker, Heroku, AWS, Git, CI/CD</li>
+                <li><strong>Tools:</strong> VS Code, Git, GitHub, Postman, Figma</li>
+            </ul>
+            
+            <h3 class="text-2xl font-semibent text-gray-900 mb-4">Beyond Code</h3>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                When I'm not coding, you can find me exploring new technologies, contributing to open-source 
+                projects, or sharing knowledge through technical writing. I believe in giving back to the 
+                developer community and helping others on their coding journey.
+            </p>
+            
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">Let's Connect</h3>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mb-8">
+                I'm always open to discussing new opportunities, collaborating on interesting projects, 
+                or simply having a conversation about technology. Feel free to reach out if you'd like 
+                to connect or have any questions about my work.
+            </p>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 text-center">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-4">Ready to Work Together?</h3>
+                <p class="text-lg text-gray-700 mb-6">
+                    Let's discuss how I can help bring your project to life
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'portfolio:contact' %}" 
+                       class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+                        Get In Touch
+                    </a>
+                    <a href="{% url 'portfolio:resume_download' %}" 
+                       class="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3 rounded-lg font-semibold transition duration-200">
+                        Download Resume
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Highlight -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Core Competencies</h2>
+            <p class="text-lg text-gray-600">Technologies and skills I work with daily</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fab fa-python text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Backend Development</h3>
+                <p class="text-gray-600">Django, Python, REST APIs, Database Design</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fab fa-react text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Frontend Development</h3>
+                <p class="text-gray-600">React, JavaScript, HTML5, CSS3, Responsive Design</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-cloud text-purple-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Cloud & DevOps</h3>
+                <p class="text-gray-600">Heroku, AWS, Docker, Git, CI/CD Pipelines</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

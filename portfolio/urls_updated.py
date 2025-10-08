@@ -15,7 +15,7 @@ urlpatterns = [
     # CV/Resume download
     path('resume/', views.ResumeDownloadView.as_view(), name='resume_download'),
     
-    # Essential pages for AdSense approval
+    # Essential pages for AdSense
     path('about/', views.AboutView.as_view(), name='about'),
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('privacy/', views.PrivacyView.as_view(), name='privacy'),
