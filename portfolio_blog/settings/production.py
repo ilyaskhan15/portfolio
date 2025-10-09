@@ -41,6 +41,8 @@ if REDIS_URL:
                 'CONNECTION_POOL_KWARGS': {
                     'max_connections': 50,
                     'retry_on_timeout': True,
+                    'ssl_cert_reqs': None,  # Disable SSL certificate verification
+                    'ssl_check_hostname': False,
                 },
                 'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
                 'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',
