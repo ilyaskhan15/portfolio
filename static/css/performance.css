@@ -1,0 +1,101 @@
+/* OPTIMIZED CSS UTILITIES */
+/* Add these to your main CSS file for better performance */
+
+/* Critical CSS - inline this in the <head> */
+.critical-styles {
+    /* Above-the-fold content styles */
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    .hero-section { min-height: 50vh; }
+    .nav-bar { position: sticky; top: 0; z-index: 100; }
+}
+
+/* Lazy loading utilities */
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    background-color: #f3f4f6; /* Tailwind gray-100 */
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+}
+
+.lazy-image::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    background: linear-gradient(45deg, transparent 30%, #e5e7eb 50%, transparent 70%);
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Performance-optimized animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Optimize transform animations for GPU acceleration */
+.hover-lift {
+    transition: transform 0.2s ease-out;
+    will-change: transform;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Optimized button transitions */
+.btn-optimized {
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    will-change: background-color, box-shadow;
+}
+
+/* Image optimization classes */
+.responsive-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* Note: loading="lazy" is an HTML attribute, not CSS property */
+}
+
+.hero-image {
+    object-fit: cover;
+    object-position: center;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Grid optimizations */
+.optimized-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    contain: layout style;
+}
+
+/* Scroll performance */
+.smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Performance hints for browsers */
+.performance-optimized {
+    contain: layout style paint;
+    content-visibility: auto;
+    contain-intrinsic-size: 300px; /* Estimated height */
+}
