@@ -10,7 +10,7 @@ urlpatterns = [
     
     # Category and tag pages
     path('category/<slug:slug>/', views.CategoryPostsView.as_view(), name='category_posts'),
-    path('tag/<slug:slug>/', views.TagPostsView.as_view(), name='tag_posts'),
+    path('tag/<str:slug>/', views.TagPostsView.as_view(), name='tag_posts'),
     
     # Search
     path('search/', views.PostSearchView.as_view(), name='post_search'),
