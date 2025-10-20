@@ -26,11 +26,27 @@ import os
 
 # View to serve ads.txt file
 def serve_ads_txt(request):
-    """Serve ads.txt file for Google AdSense"""
+    """Serve ads.txt file for Google AdSense.
+
+    Looks in multiple locations to be robust across deployments:
+    - STATIC_ROOT (if set, where collectstatic places files)
+    - repository 'static/ads.txt'
+    - 'staticfiles/ads.txt' (collected copy)
+    """
     from django.http import FileResponse, Http404
-    ads_txt_path = os.path.join(settings.BASE_DIR, 'static', 'ads.txt')
-    if os.path.exists(ads_txt_path):
-        return FileResponse(open(ads_txt_path, 'rb'), content_type='text/plain')
+    candidates = []
+    # Check STATIC_ROOT first if available
+    if getattr(settings, 'STATIC_ROOT', None):
+        candidates.append(os.path.join(settings.STATIC_ROOT, 'ads.txt'))
+    # Check repository static directory
+    candidates.append(os.path.join(settings.BASE_DIR, 'static', 'ads.txt'))
+    # Check collected staticfiles directory as fallback
+    candidates.append(os.path.join(settings.BASE_DIR, 'staticfiles', 'ads.txt'))
+
+    for path in candidates:
+        if path and os.path.exists(path):
+            return FileResponse(open(path, 'rb'), content_type='text/plain; charset=utf-8')
+
     raise Http404("ads.txt not found")
 
 urlpatterns = [

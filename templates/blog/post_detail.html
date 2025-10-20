@@ -19,11 +19,7 @@
 {% endif %}
 {% endblock %}
 
-{% block extra_head %}
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7667391240665296"
-     crossorigin="anonymous"></script>
-{% endblock %}
+{% block extra_head %}{% endblock %}
 
 {% block content %}
 <!-- Article Header -->
@@ -112,6 +108,19 @@
     <div class="prose prose-sm sm:prose-lg max-w-none mb-8 sm:mb-12">
         {{ post.content|safe }}
     </div>
+
+        {# Optional AdSense ad unit: only render if ADSENSE_AD_SLOT is provided via settings/env. #}
+        {% if ADSENSE_AD_SLOT %}
+        <div class="my-8 flex justify-center">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="{{ ADSENSE_AD_CLIENT }}"
+                 data-ad-slot="{{ ADSENSE_AD_SLOT }}"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+        {% endif %}
     
     <!-- Tags -->
     {% if post.tags.all %}

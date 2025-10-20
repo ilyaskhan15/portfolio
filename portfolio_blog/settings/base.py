@@ -100,6 +100,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.media",
+                "portfolio_blog.context_processors.adsense_settings",
             ],
         },
     },
@@ -240,6 +241,12 @@ CKEDITOR_CONFIGS = {
 
 # Django Taggit
 TAGGIT_CASE_INSENSITIVE = True
+
+# Google AdSense settings (can be overridden via env vars)
+# ADSENSE_AD_CLIENT: publisher client id (ca-pub-...)
+# ADSENSE_AD_SLOT: optional ad unit id to render ad blocks on content pages
+ADSENSE_AD_CLIENT = config('ADSENSE_AD_CLIENT', default='ca-pub-7667391240665296')
+ADSENSE_AD_SLOT = config('ADSENSE_AD_SLOT', default='')
 
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
