@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Resume - Download{% endblock %}
-{% block og_title %}Resume - Download{% endblock %}
-{% block twitter_title %}Resume - Download{% endblock %}
+{% block title %}Resume - View & Download{% endblock %}
+{% block og_title %}Resume - View & Download{% endblock %}
+{% block twitter_title %}Resume - View & Download{% endblock %}
 
 {% block meta_description %}Download my professional resume and CV to learn more about my experience, skills, and qualifications.{% endblock %}
 
@@ -23,19 +23,28 @@
 <!-- Resume Status Section -->
 <section class="py-16 bg-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {% if profile and profile.resume %}
+        {% if resume_available %}
         <!-- Resume Available -->
         <div class="bg-green-50 border border-green-200 rounded-lg p-8 mb-8">
             <i class="fas fa-file-pdf text-green-600 text-6xl mb-4"></i>
             <h2 class="text-2xl font-bold text-green-800 mb-4">Resume Available</h2>
             <p class="text-green-700 mb-6">
-                My professional resume is ready for download. Click below to get the latest version.
+                You can view the resume below or download a copy as PDF.
             </p>
-            <a href="{% url 'portfolio:resume_download' %}" 
-               class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-200 inline-flex items-center">
-                <i class="fas fa-download mr-2"></i>
-                Download Resume (PDF)
-            </a>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="{{ download_url }}" 
+                   class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-200 inline-flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i>
+                    Download PDF
+                </a>
+                {% if resume_url %}
+                <a href="{{ resume_url }}" target="_blank" rel="noopener" 
+                   class="border-2 border-green-600 text-green-700 hover:bg-green-600 hover:text-white px-8 py-3 rounded-lg font-semibold transition duration-200 inline-flex items-center justify-center">
+                    <i class="fas fa-external-link-alt mr-2"></i>
+                    Open in New Tab
+                </a>
+                {% endif %}
+            </div>
         </div>
         {% else %}
         <!-- Resume Not Available -->
@@ -48,6 +57,18 @@
         </div>
         {% endif %}
         
+        {% if resume_available and resume_url %}
+        <!-- Inline Viewer -->
+        <div class="mt-12">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4 text-left">Preview</h3>
+            <div class="rounded-xl shadow-lg border border-gray-200 overflow-hidden bg-gray-50">
+                <object data="{{ resume_url }}" type="application/pdf" class="w-full h-[780px]">
+                    <iframe src="{{ resume_url }}" class="w-full h-[780px]" title="Resume Preview"></iframe>
+                </object>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Alternative Content -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <!-- Portfolio Link -->
@@ -99,21 +120,23 @@
         <!-- Contact Information -->
         <div class="mt-12 bg-primary-50 p-8 rounded-lg">
             <h3 class="text-2xl font-bold text-primary-900 mb-4">Get in Touch</h3>
-            <p class="text-primary-700 mb-6">
-                Interested in working together? I'd love to hear from you.
-            </p>
+            <p class="text-primary-700 mb-6">Interested in working together? I'd love to hear from you.</p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="mailto:your.email@example.com" 
+                {% if profile and profile.email %}
+                <a href="mailto:{{ profile.email }}" 
                    class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-200 inline-flex items-center justify-center">
                     <i class="fas fa-envelope mr-2"></i>
-                    Send Email
+                    Email Me
                 </a>
-                <a href="https://linkedin.com/in/yourprofile" 
+                {% endif %}
+                {% if profile and profile.linkedin %}
+                <a href="{{ profile.linkedin }}" 
                    target="_blank" rel="noopener"
                    class="border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white px-6 py-3 rounded-lg font-semibold transition duration-200 inline-flex items-center justify-center">
                     <i class="fab fa-linkedin-in mr-2"></i>
-                    LinkedIn Profile
+                    LinkedIn
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>

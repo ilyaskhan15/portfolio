@@ -163,25 +163,39 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
 }
 
-# Django 5.1+ Storage Configuration
-STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-    "staticfiles": {
-        # Default static files storage - will be overridden in production
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
+# Use Cloudinary only when all credentials are present; otherwise fall back to local storage
+CLOUDINARY_ENABLED = all([
+    CLOUDINARY_STORAGE.get('CLOUD_NAME'),
+    CLOUDINARY_STORAGE.get('API_KEY'),
+    CLOUDINARY_STORAGE.get('API_SECRET'),
+])
+
+if CLOUDINARY_ENABLED:
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            # Default static files storage - will be overridden in production
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Legacy setting for compatibility with packages that check for it
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# Legacy setting for compatibility (Django < 4.2)
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-# Media files - Cloudinary will override these
-# Only needed as fallback for development without Cloudinary
+# Media files - Cloudinary will override these when enabled
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

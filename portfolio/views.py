@@ -2,11 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 from django.http import HttpResponse, Http404, FileResponse
 from django.conf import settings
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 import os
 import mimetypes
 import urllib.parse
+import requests
 from .models import Project, Skill, Experience, Education, Profile
 
 User = get_user_model()
@@ -221,93 +223,80 @@ class TermsView(TemplateView):
 
 
 class ResumeDownloadView(TemplateView):
-    """Handle resume/CV download"""
+    """Show resume page with optional download action"""
     template_name = 'portfolio/resume_not_found.html'
-    
+
+    def _download_response(self, profile):
+        """Return a download response for the profile resume if available."""
+        if not profile or not profile.resume:
+            return None
+
+        # Cloudinary download variants
+        if hasattr(profile.resume, 'url') and 'cloudinary' in profile.resume.url:
+            cloudinary_url = profile.resume.url
+            download_urls = []
+
+            if '/image/upload/' in cloudinary_url:
+                download_urls.append(cloudinary_url.replace('/image/upload/', '/raw/upload/fl_attachment/'))
+                download_urls.append(cloudinary_url.replace('/image/upload/', '/image/upload/fl_attachment/'))
+
+            if '/upload/' in cloudinary_url:
+                parts = cloudinary_url.split('/upload/')
+                if len(parts) == 2:
+                    download_urls.append(f"{parts[0]}/upload/fl_attachment/{parts[1]}")
+
+            download_urls.append(cloudinary_url)
+
+            for attempt_url in download_urls:
+                try:
+                    response = requests.head(attempt_url, timeout=5)
+                    if response.status_code == 200:
+                        return redirect(attempt_url)
+                except Exception:
+                    continue
+
+            return redirect(cloudinary_url)
+
+        # Local file download
+        if hasattr(profile.resume, 'path') and os.path.exists(profile.resume.path):
+            file_path = profile.resume.path
+            content_type, _ = mimetypes.guess_type(file_path)
+            if not content_type:
+                content_type = 'application/octet-stream'
+
+            file_ext = os.path.splitext(file_path)[1]
+            filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
+
+            file_handle = open(file_path, 'rb')
+            response = FileResponse(file_handle, content_type=content_type)
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            response['Content-Length'] = os.path.getsize(file_path)
+            return response
+
+        return None
+
     def get(self, request, *args, **kwargs):
-        try:
-            profile = Profile.objects.filter(is_active=True).first()
-            if profile and profile.resume:
-                # Check if file is stored on Cloudinary
-                if hasattr(profile.resume, 'url') and 'cloudinary' in profile.resume.url:
-                    # For Cloudinary files, create proper download URL
-                    from django.shortcuts import redirect
-                    from django.http import HttpResponse
-                    import urllib.parse
-                    import requests
-                    
-                    # Get the original Cloudinary URL
-                    cloudinary_url = profile.resume.url
-                    
-                    # Generate clean filename
-                    file_ext = os.path.splitext(profile.resume.name)[1] or '.pdf'
-                    filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
-                    
-                    # Try multiple approaches for maximum compatibility
-                    download_urls = []
-                    
-                    # Method 1: Try /raw/upload/ with fl_attachment
-                    if '/image/upload/' in cloudinary_url:
-                        raw_url = cloudinary_url.replace('/image/upload/', '/raw/upload/fl_attachment/')
-                        download_urls.append(raw_url)
-                    
-                    # Method 2: Try original URL with fl_attachment (for image/upload)
-                    if '/image/upload/' in cloudinary_url:
-                        image_download_url = cloudinary_url.replace('/image/upload/', '/image/upload/fl_attachment/')
-                        download_urls.append(image_download_url)
-                    
-                    # Method 3: Try with flags parameter
-                    if '/upload/' in cloudinary_url:
-                        parts = cloudinary_url.split('/upload/')
-                        if len(parts) == 2:
-                            flags_url = f"{parts[0]}/upload/fl_attachment/{parts[1]}"
-                            download_urls.append(flags_url)
-                    
-                    # Method 4: Original URL as fallback
-                    download_urls.append(cloudinary_url)
-                    
-                    # Try each URL and return the first working one
-                    for attempt_url in download_urls:
-                        try:
-                            # Quick HEAD request to check if URL exists
-                            response = requests.head(attempt_url, timeout=5)
-                            if response.status_code == 200:
-                                return redirect(attempt_url)
-                        except:
-                            continue
-                    
-                    # If none work, redirect to original URL anyway
-                    return redirect(cloudinary_url)
-                
-                # For local files
-                if hasattr(profile.resume, 'path') and os.path.exists(profile.resume.path):
-                    file_path = profile.resume.path
-                    
-                    # Determine content type
-                    content_type, _ = mimetypes.guess_type(file_path)
-                    if not content_type:
-                        content_type = 'application/octet-stream'
-                    
-                    # Get file extension
-                    file_ext = os.path.splitext(file_path)[1]
-                    filename = f"{profile.full_name.replace(' ', '_')}_Resume{file_ext}"
-                    
-                    # Open and return file
-                    file_handle = open(file_path, 'rb')
-                    response = FileResponse(file_handle, content_type=content_type)
-                    response['Content-Disposition'] = f'attachment; filename="{filename}"'
-                    response['Content-Length'] = os.path.getsize(file_path)
-                    return response
-        except Exception as e:
-            # Log the error for debugging
-            print(f"Resume download error: {e}")
-            import traceback
-            traceback.print_exc()
-        
-        # If no resume is found, render a template instead of raising 404
-        return self.render_to_response(self.get_context_data())
-    
+        profile = Profile.objects.filter(is_active=True).first()
+        download_requested = request.GET.get('download') == '1'
+
+        if download_requested:
+            try:
+                download_response = self._download_response(profile)
+                if download_response:
+                    return download_response
+            except Exception as e:
+                # Log for debugging but still fall back to page render
+                print(f"Resume download error: {e}")
+                import traceback
+                traceback.print_exc()
+
+        return self.render_to_response(self.get_context_data(profile=profile))
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = Profile.objects.filter(is_active=True).first()
+        profile = kwargs.get('profile') or Profile.objects.filter(is_active=True).first()
+        context['profile'] = profile
+        context['resume_available'] = bool(profile and profile.resume)
+        context['resume_url'] = profile.resume.url if profile and hasattr(profile.resume, 'url') else None
+        context['download_url'] = f"{reverse('portfolio:resume_download')}?download=1"
         return context
