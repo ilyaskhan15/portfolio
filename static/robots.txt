@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://muhammadilyas.tech/sitemap.xml
+Sitemap: https://muhammadilyas.tech/sitemap-blog.xml
+
+# Allow Google AdSense crawler
+User-agent: Googlebot-Image
+Allow: /
+
+# Allow all search engines
+User-agent: *
+Allow: /

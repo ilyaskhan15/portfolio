@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.views.static import serve
+from django.contrib.sitemaps.views import sitemap
 from portfolio.views import HomeView
 import os
 
@@ -43,18 +44,39 @@ def serve_ads_txt(request):
     # Check collected staticfiles directory as fallback
     candidates.append(os.path.join(settings.BASE_DIR, 'staticfiles', 'ads.txt'))
 
-    for path in candidates:
-        if path and os.path.exists(path):
-            return FileResponse(open(path, 'rb'), content_type='text/plain; charset=utf-8')
+    for file_path in candidates:
+        if file_path and os.path.exists(file_path):
+            response = FileResponse(open(file_path, 'rb'), content_type='text/plain; charset=utf-8')
+            response['Access-Control-Allow-Origin'] = '*'
+            return response
 
     raise Http404("ads.txt not found")
+
+
+def serve_robots_txt(request):
+    """Serve robots.txt file."""
+    from django.http import FileResponse, Http404
+    candidates = []
+    if getattr(settings, 'STATIC_ROOT', None):
+        candidates.append(os.path.join(settings.STATIC_ROOT, 'robots.txt'))
+    candidates.append(os.path.join(settings.BASE_DIR, 'static', 'robots.txt'))
+    candidates.append(os.path.join(settings.BASE_DIR, 'staticfiles', 'robots.txt'))
+
+    for file_path in candidates:
+        if file_path and os.path.exists(file_path):
+            response = FileResponse(open(file_path, 'rb'), content_type='text/plain; charset=utf-8')
+            return response
+
+    raise Http404("robots.txt not found")
 
 urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
     
-    # Google AdSense ads.txt
+    # Search engines
     path('ads.txt', serve_ads_txt, name='ads_txt'),
+    path('.well-known/ads.txt', serve_ads_txt, name='well_known_ads_txt'),
+    path('robots.txt', serve_robots_txt, name='robots_txt'),
     
     # Homepage - Dynamic content
     path('', HomeView.as_view(), name='home'),
