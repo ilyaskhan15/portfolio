@@ -24,8 +24,12 @@
     <meta name="twitter:title" content="{% block twitter_title %}Portfolio & Blog{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Professional portfolio and blog featuring web development projects, technical articles, and football insights.{% endblock %}">
     
-    <!-- Favicon -->
+    <!-- Favicon - Multiple formats for cross-browser compatibility -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% load static %}{% static 'img/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% load static %}{% static 'img/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" href="{% load static %}{% static 'img/apple-touch-icon.png' %}">
     <link rel="icon" type="image/x-icon" href="{% load static %}{% static 'img/favicon.ico' %}">
+    <meta name="theme-color" content="#1e3a8a">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
